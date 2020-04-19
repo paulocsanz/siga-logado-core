@@ -76,6 +76,23 @@ def documents(cookies):
         # Reverse engineering is needed to select specific pdfs (it uses js to lazy load)
         return resp.content.decode("utf-8")
 
+def pdf(cookies, filename):
+    with requests.Session() as session:
+        # Set session cookies with the ones obtained in `login_to_siga`
+        session.cookies = cookies
+
+        document = session.post(portal_uri + "/Documentos/certidoes/emitir", data = {
+            "gnosys-decor-vis-seletor-matricula-aluno": "0",
+            "gnosys-decor-vis-seletor-matricula-form": "gnosys-decor-vis-seletor-matricula-form",
+            "autoScroll": "",
+            "javax.faces.ViewState": "j_id1",
+            "botaoBoletim": "botaoBoletim"
+        }, allow_redirects=False)
+
+        redirect_url = document._next.url
+        with open(filename, "wb") as f:
+            f.write(session.get(redirect_url).content)
+
 def title_case(txt):
     return " ".join([t[0].upper() + t[1:].lower() for t in txt.split(" ")])
 
@@ -87,3 +104,4 @@ if __name__ == "__main__":
         print(personal(cookie))
         print(enrolled(cookie))
         print(documents(cookie))
+        print(pdf(cookie, "pdf.pdf"))
