@@ -23,7 +23,7 @@ def login_to_siga(user, password):
         gnosys_resp = session.get(portal_uri + "/Portal/auth.seam")
         return gnosys_resp.cookies
 
-def personal_info(cookies):
+def personal(cookies):
     with requests.Session() as session:
         session.cookies = cookies
         session.get(portal_uri + "/Registro")
@@ -31,7 +31,7 @@ def personal_info(cookies):
         soup = BeautifulSoup(resp.content.decode("utf-8"), "html.parser")
         return str(soup.find("div", {"id": "blocoDadosPessoais"}))
 
-def enrolled_info(cookies):
+def enrolled(cookies):
     with requests.Session() as session:
         session.cookies = cookies
         session.get(portal_uri + "/Inscricao")
@@ -42,6 +42,13 @@ def enrolled_info(cookies):
         resp = session.get(portal_uri + "/Inscricao/seam/resource/rest/inscricao/pedidos?token=" + token)
         return resp.content.decode("utf-8")
 
+def documents(cookies):
+    with requests.Session() as session:
+        session.cookies = cookies
+        session.get(portal_uri + "/Documentos")
+        resp = session.get(portal_uri + "/Documentos/auth.seam")
+        return resp.content.decode("utf-8")
+
 def title_case(txt):
     return " ".join([t[0].upper() + t[1:].lower() for t in txt.split(" ")])
 
@@ -50,5 +57,6 @@ if __name__ == "__main__":
         print("Must call script with username and password\n  python3 main.py <username> <password>")
     else:
         cookie = login_to_siga(argv[1], argv[2])
-        print(personal_info(cookie))
-        print(enrolled_info(cookie))
+        print(personal(cookie))
+        print(enrolled(cookie))
+        print(documents(cookie))
