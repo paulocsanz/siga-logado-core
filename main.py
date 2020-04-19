@@ -61,7 +61,7 @@ def login_to_siga(user, password):
 
         return (json_enrolled_disciplines_content)
 
-def citle_case(txt):
+def title_case(txt):
     return " ".join([t[0].upper() + t[1:].lower() for t in txt.split(" ")])
 
 if __name__ == "__main__":
