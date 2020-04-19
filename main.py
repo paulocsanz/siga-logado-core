@@ -66,7 +66,7 @@ def TitleCase(txt):
 
 if __name__ == "__main__":
 
-    argv = ["13429384702", "8778Bruno"]
+    argv = ["", ""]
 
     if len(argv) != 2:
         print("Must call script with username and password\n  python3 main.py <username> <password>")
